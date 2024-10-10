@@ -1,11 +1,12 @@
-// src/App.js
+// src/App.jsx
+
 import React from 'react';
-import SongList from './components/SongList'; // Import your SongList component
+import SongList from './components/SongList';
 
 const App = () => {
     return (
         <div>
-            <h1>My Music App</h1>
+            <h1>Song Manager</h1>
             <SongList />
         </div>
     );

@@ -1,19 +1,19 @@
 // src/store/index.js
+
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import songReducer from './slices/songSlice'; // Import your song slice
-import rootSaga from './sagas'; // Import your root saga
+import songReducer from './slices/songSlice';
+import rootSaga from './sagas';
 
-const sagaMiddleware = createSagaMiddleware(); // Create saga middleware
+const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
     reducer: {
         songs: songReducer,
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(sagaMiddleware), // Add saga middleware
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(rootSaga); // Run the root saga
+sagaMiddleware.run(rootSaga);
 
 export default store;

@@ -1,6 +1,7 @@
 // src/api/songApi.js
+
 export const fetchSongsApi = async () => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Replace with your actual API endpoint
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Update the endpoint based on your backend
     if (!response.ok) {
         throw new Error('Failed to fetch songs');
     }

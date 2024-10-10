@@ -1,9 +1,8 @@
-// src/store/sagas/index.js
+// src/sagas/index.js
+
 import { all } from 'redux-saga/effects';
-import songSaga from './store/sagas/songSaga'; // Import your song saga
+import songSaga from './songSaga';
 
 export default function* rootSaga() {
-    yield all([
-        songSaga(), // Add your sagas here
-    ]);
+    yield all([songSaga()]);
 }
