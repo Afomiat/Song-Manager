@@ -1,7 +1,5 @@
-// src/api/songApi.js
-
 export const fetchSongsApi = async () => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts'); // Update the endpoint based on your backend
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
     if (!response.ok) {
         throw new Error('Failed to fetch songs');
     }
@@ -11,9 +9,7 @@ export const fetchSongsApi = async () => {
 export const addSongApi = async (song) => {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(song),
     });
     if (!response.ok) {
@@ -22,12 +18,11 @@ export const addSongApi = async (song) => {
     return response.json();
 };
 
+
 export const updateSongApi = async (song) => {
     const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${song.id}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(song),
     });
     if (!response.ok) {

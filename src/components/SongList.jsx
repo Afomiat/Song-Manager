@@ -1,55 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    fetchSongsRequest,
-    addSong,
-    updateSong,
-    deleteSong,
-} from '../store/slices/songSlice'; 
+import { fetchSongsRequest, updateSong, deleteSong, addSong } from '../store/slices/songSlice'; 
+import { v4 as uuidv4 } from 'uuid'; // Importing uuid for unique IDs
 
 const SongList = () => {
     const dispatch = useDispatch();
     const { songs, loading, error } = useSelector(state => state.songs);
-    const [newSong, setNewSong] = useState({ title: '' });
     const [editingSong, setEditingSong] = useState(null);
+    const [newSongTitle, setNewSongTitle] = useState('');
 
-    // Fetch songs when the component mounts
     useEffect(() => {
         dispatch(fetchSongsRequest());
     }, [dispatch]);
 
-    // Add a new song
-    const handleAddSong = () => {
-        if (!newSong.title.trim()) return;  // Avoid adding empty or whitespace-only titles
-        dispatch(addSong({ title: newSong.title.trim() }));
-        setNewSong({ title: '' });  // Clear the input after adding
-    };
-
-    // Update an existing song
     const handleUpdateSong = () => {
-        if (!editingSong || !editingSong.title.trim()) return;  // Prevent empty updates
+        if (!editingSong || !editingSong.title.trim()) return;  
         dispatch(updateSong(editingSong));
-        setEditingSong(null);  // Reset the editing state
+        setEditingSong(null);  
     };
 
-    // Delete a song by id
     const handleDeleteSong = (id) => {
         dispatch(deleteSong(id));
     };
 
+    const handleAddSong = () => {
+        if (!newSongTitle.trim()) return;  
+        const newSong = { id: uuidv4(), title: newSongTitle }; // Use a unique ID
+        dispatch(addSong(newSong));
+        setNewSongTitle(''); // Clear input after adding
+    };
+    
     return (
         <div>
-            <input
-                type="text"
-                value={newSong.title}
-                onChange={(e) => setNewSong({ title: e.target.value })}
-                placeholder="Add a new song"
-            />
-            <button onClick={handleAddSong}>Add Song</button>
             <h2>Song List</h2>
 
             {loading && <p>Loading...</p>}
-            {error && <p>Error: {error}</p>}
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+
+            <input 
+                type="text" 
+                value={newSongTitle} 
+                onChange={(e) => setNewSongTitle(e.target.value)} 
+                placeholder="New song title" 
+            />
+            <button onClick={handleAddSong}>Add Song</button>
 
             <ul>
                 {songs.map(song => (
@@ -58,7 +52,7 @@ const SongList = () => {
                             <>
                                 <input
                                     type="text"
-                                    value={editingSong.title}
+                                    value={editingSong.title || ''}
                                     onChange={(e) =>
                                         setEditingSong({
                                             ...editingSong,

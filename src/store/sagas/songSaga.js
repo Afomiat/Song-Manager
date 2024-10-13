@@ -1,29 +1,24 @@
-// src/sagas/songSaga.js
-
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { fetchSongsApi, addSongApi, updateSongApi, deleteSongApi } from '../../api/songApi';
-import { fetchSongsRequest, fetchSongsSuccess, fetchSongsFailure, addSong, updateSong, deleteSong } from '../slices/songSlice';
+import { fetchSongsApi, updateSongApi, deleteSongApi,addSongApi } from '../../api/songApi';
+import { fetchSongsSuccess, fetchSongsFailure, updateSong, deleteSong,addSong } from '../slices/songSlice';
 
 function* fetchSongs() {
     try {
         const songs = yield call(fetchSongsApi);
-        console.log('Fetched songs:', songs);
-        yield put(fetchSongsSuccess(songs));
+        const formattedSongs = songs.slice(0, 5);
+        yield put(fetchSongsSuccess(formattedSongs));
     } catch (error) {
-        console.error('Fetch songs error:', error);
         yield put(fetchSongsFailure(error.message));
     }
 }
-
-function* createSong(action) {
+function* addSongSaga(action) {
     try {
         const song = yield call(addSongApi, action.payload);
-        yield put(addSong(song));
+        yield put(addSong(song)); // Dispatch action to add song to the store
     } catch (error) {
         console.error(error);
     }
 }
-
 function* editSong(action) {
     try {
         const song = yield call(updateSongApi, action.payload);
@@ -44,9 +39,9 @@ function* removeSong(action) {
 
 function* songSaga() {
     yield takeEvery('songs/fetchSongsRequest', fetchSongs);
-    yield takeEvery('songs/addSong', createSong);
     yield takeEvery('songs/updateSong', editSong);
     yield takeEvery('songs/deleteSong', removeSong);
+    yield takeEvery('songs/addSong', addSongSaga); 
 }
 
 export default songSaga;

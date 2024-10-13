@@ -1,8 +1,6 @@
-// src/store/songSlice.js
-
 import { createSlice } from '@reduxjs/toolkit';
 
-const songSlice = createSlice({
+export const songSlice = createSlice({
     name: 'songs',
     initialState: {
         songs: [],
@@ -41,9 +39,10 @@ export const {
     fetchSongsRequest,
     fetchSongsSuccess,
     fetchSongsFailure,
-    addSong,
     updateSong,
     deleteSong,
+    addSong,
+
 } = songSlice.actions;
 
 export default songSlice.reducer;
