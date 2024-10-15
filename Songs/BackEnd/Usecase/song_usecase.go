@@ -31,3 +31,11 @@ func (su *SongUsecase) AddSong(song Domain.Song) error {
 func (su *SongUsecase) GetSongs() ([]Domain.Song, error) {
 	return su.SongRepo.GetSong()
 }
+
+func (su *SongUsecase) GetSongByID(id string) (Domain.Song, error){
+	return su.SongRepo.GetSongByID(id)
+}
+
+func (su *SongUsecase) DeleteSong(id string) (Domain.Song, error){
+	return su.SongRepo.DeleteSong(id)
+}

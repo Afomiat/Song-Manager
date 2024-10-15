@@ -45,3 +45,34 @@ func (sc *SongController) GetSongs(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"tasks": songs})
 }
+
+func (sc *SongController) GetSongByID(c *gin.Context) {
+	songs, err := sc.SongUsecase.GetSongByID(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"tasks": songs})
+}
+
+
+func (sc *SongController) DeleteSong(c *gin.Context) {
+	id := c.Param("id")
+
+	song, err := sc.SongUsecase.GetSongByID(id)
+
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+
+	}
+
+	if _,err := sc.SongUsecase.DeleteSong(id); err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "task deleted successfully", "task": song})
+
+}

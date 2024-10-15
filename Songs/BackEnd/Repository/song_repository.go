@@ -5,6 +5,7 @@ import (
 
 	"github.com/Afomiat/Song-Manager/Domain"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -44,4 +45,32 @@ func (s *SongRepoImplement) GetSong() ([]Domain.Song, error) {
 	}
 
 	return songs, nil
+}
+
+func (s *SongRepoImplement) GetSongByID(id string)(Domain.Song, error){
+	var song Domain.Song
+	newId, err :=  primitive.ObjectIDFromHex(id)
+
+	if err != nil{
+		return Domain.Song{}, err
+	}
+
+	err = s.collection.FindOne(context.Background(),bson.M{"_id": newId}).Decode(&song)
+	if err != nil{
+		return Domain.Song{}, err
+	}
+	return song, err
+}
+
+func (s *SongRepoImplement) DeleteSong(id string) (Domain.Song, error){
+	newId, err := primitive.ObjectIDFromHex(id) 
+	var song Domain.Song
+
+	if err != nil{
+		return Domain.Song{}, err
+	}
+
+	err = s.collection.FindOneAndDelete(context.Background(), bson.M{"_id": newId}).Decode(&song)
+	return song, err
+
 }

@@ -11,7 +11,7 @@ type Song struct {
 type SongRepository interface {
 	AddSong(song Song) (Song, error)
 	GetSong() ([]Song, error)
-	// GetSongByID(id string) (Song, error)
+	GetSongByID(id string) (Song, error)
 	// UpdateSong(id string, song Song) (Song, error)
-	// DeleteSong(id string) error
+	DeleteSong(id string) (Song, error)
 }
