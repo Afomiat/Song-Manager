@@ -18,5 +18,6 @@ func SetupSongRouter(router *gin.Engine) {
 	songRoutes.GET("/", songController.GetSongs)
 	songRoutes.GET("/:id", songController.GetSongByID)
 	songRoutes.DELETE("/:id",songController.DeleteSong)
+	songRoutes.PUT("/:id",songController.UpdateSong)
 
 }

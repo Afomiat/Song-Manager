@@ -39,3 +39,11 @@ func (su *SongUsecase) GetSongByID(id string) (Domain.Song, error){
 func (su *SongUsecase) DeleteSong(id string) (Domain.Song, error){
 	return su.SongRepo.DeleteSong(id)
 }
+
+func (sc *SongUsecase) UpdateSong(id string, song Domain.Song) error{
+	if song.Artist == "" || song.Title == ""{
+		return errors.New("missing required fields")
+	}
+	_,err := sc.SongRepo.UpdateSong(id, song)
+	return err
+}

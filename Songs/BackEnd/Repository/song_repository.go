@@ -74,3 +74,13 @@ func (s *SongRepoImplement) DeleteSong(id string) (Domain.Song, error){
 	return song, err
 
 }
+
+func (s *SongRepoImplement) UpdateSong(id string, song Domain.Song) (Domain.Song, error){
+	newId , err := primitive.ObjectIDFromHex(id)
+	if err != nil{
+		return Domain.Song{}, err
+	}
+
+	_, err = s.collection.UpdateOne(context.Background(), bson.M{"_id":newId}, bson.M{"$set":song})
+	return song, err
+}

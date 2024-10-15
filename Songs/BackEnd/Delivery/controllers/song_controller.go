@@ -76,3 +76,19 @@ func (sc *SongController) DeleteSong(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "task deleted successfully", "task": song})
 
 }
+
+func (sc *SongController) UpdateSong(c *gin.Context){
+	id := c.Param("id")
+	var song Domain.Song
+
+	if err := c.ShouldBindJSON(&song); err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := sc.SongUsecase.UpdateSong(id, song); err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "task updated successfully"})
+}
