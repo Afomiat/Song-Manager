@@ -14,7 +14,8 @@ function* fetchSongs() {
 function* addSongSaga(action) {
     try {
         const song = yield call(addSongApi, action.payload);
-        yield put(addSong(song)); // Dispatch action to add song to the store
+        console.log("hdhd", song);
+
     } catch (error) {
         console.error(error);
     }

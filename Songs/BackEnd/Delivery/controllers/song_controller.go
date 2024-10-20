@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/Afomiat/Song-Manager/Domain"
@@ -22,11 +23,15 @@ func (sc *SongController) AddSong(c *gin.Context) {
 	var song Domain.Song
 
 	if err := c.ShouldBindJSON(&song); err != nil {
+		log.Println("Error binding JSON:", err) 
+
 		c.JSON(http.StatusBadRequest, gin.H{"errorAfi": err.Error()})
 		return
 	}
 
 	// song.Artist = c.GetString("artist")
+	log.Printf("Received Song: %+v\n", song) 
+
 	if err := sc.SongUsecase.AddSong(song); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -43,8 +48,7 @@ func (sc *SongController) GetSongs(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"tasks": songs})
-}
+	c.JSON(http.StatusOK, songs) }
 
 func (sc *SongController) GetSongByID(c *gin.Context) {
 	songs, err := sc.SongUsecase.GetSongByID(c.Param("id"))
@@ -53,8 +57,7 @@ func (sc *SongController) GetSongByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"tasks": songs})
-}
+	c.JSON(http.StatusOK, songs) }
 
 
 func (sc *SongController) DeleteSong(c *gin.Context) {

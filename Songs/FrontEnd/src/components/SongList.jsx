@@ -1,35 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSongsRequest, updateSong, deleteSong, addSong } from '../store/slices/songSlice'; 
-import { v4 as uuidv4 } from 'uuid'; // Importing uuid for unique IDs
 
 const SongList = () => {
     const dispatch = useDispatch();
     const { songs, loading, error } = useSelector(state => state.songs);
     const [editingSong, setEditingSong] = useState(null);
     const [newSongTitle, setNewSongTitle] = useState('');
+    const [newSongArtist, setNewSongArtist] = useState('');
 
     useEffect(() => {
         dispatch(fetchSongsRequest());
     }, [dispatch]);
 
-    const handleUpdateSong = () => {
-        if (!editingSong || !editingSong.title.trim()) return;  
-        dispatch(updateSong(editingSong));
-        setEditingSong(null);  
+    const handleUpdateSong = async () => {
+        if (!editingSong || !editingSong.title.trim() || !editingSong.artist.trim()) return;
+        try {
+            await dispatch(updateSong(editingSong));
+            setEditingSong(null); // Clear editing state after update
+        } catch (error) {
+            console.error('Failed to update song:', error);
+        }
     };
 
     const handleDeleteSong = (id) => {
         dispatch(deleteSong(id));
     };
 
-    const handleAddSong = () => {
-        if (!newSongTitle.trim()) return;  
-        const newSong = { id: uuidv4(), title: newSongTitle }; // Use a unique ID
-        dispatch(addSong(newSong));
-        setNewSongTitle(''); // Clear input after adding
+    const handleAddSong = async () => {
+        if (!newSongTitle.trim() || !newSongArtist.trim()) return;  
+        const newSong = { 
+            title: newSongTitle, 
+            artist: newSongArtist  
+        };
+        try {
+            await dispatch(addSong(newSong));
+            setNewSongTitle(''); // Clear title input after adding
+            setNewSongArtist(''); // Clear artist input after adding
+            setEditingSong(null); // Ensure no song is in editing mode
+        } catch (error) {
+            console.error('Failed to add song:', error);
+        }
     };
-    
+
     return (
         <div>
             <h2>Song List</h2>
@@ -43,6 +56,12 @@ const SongList = () => {
                 onChange={(e) => setNewSongTitle(e.target.value)} 
                 placeholder="New song title" 
             />
+            <input 
+                type="text" 
+                value={newSongArtist} 
+                onChange={(e) => setNewSongArtist(e.target.value)} 
+                placeholder="New song artist" 
+            />
             <button onClick={handleAddSong}>Add Song</button>
 
             <ul>
@@ -52,11 +71,21 @@ const SongList = () => {
                             <>
                                 <input
                                     type="text"
-                                    value={editingSong.title || ''}
+                                    value={editingSong.title} 
                                     onChange={(e) =>
                                         setEditingSong({
                                             ...editingSong,
                                             title: e.target.value,
+                                        })
+                                    }
+                                />
+                                <input
+                                    type="text"
+                                    value={editingSong.artist} 
+                                    onChange={(e) =>
+                                        setEditingSong({
+                                            ...editingSong,
+                                            artist: e.target.value,
                                         })
                                     }
                                 />
@@ -65,7 +94,7 @@ const SongList = () => {
                             </>
                         ) : (
                             <>
-                                {song.title}
+                                {song.title} by {song.artist}
                                 <button onClick={() => setEditingSong(song)}>Edit</button>
                                 <button onClick={() => handleDeleteSong(song.id)}>Delete</button>
                             </>
