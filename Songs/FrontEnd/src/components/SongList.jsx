@@ -1,109 +1,113 @@
+// src/components/SongList.js
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSongsRequest, updateSong, deleteSong, addSong } from '../store/slices/songSlice'; 
+import {
+  fetchSongsRequest,
+  addSong,
+  updateSong,
+  deleteSong,
+} from '../store/slices/songSlice';
 
 const SongList = () => {
-    const dispatch = useDispatch();
-    const { songs, loading, error } = useSelector(state => state.songs);
-    const [editingSong, setEditingSong] = useState(null);
-    const [newSongTitle, setNewSongTitle] = useState('');
-    const [newSongArtist, setNewSongArtist] = useState('');
+  const dispatch = useDispatch();
+  const { songs, loading, error } = useSelector((state) => state.songs);
 
-    useEffect(() => {
-        dispatch(fetchSongsRequest());
-    }, [dispatch]);
+  const [newSong, setNewSong] = useState({ title: '', artist: '' });
+  const [editMode, setEditMode] = useState(null);
+  const [updatedSong, setUpdatedSong] = useState({ id: '', title: '', artist: '' });
 
-    const handleUpdateSong = async () => {
-        if (!editingSong || !editingSong.title.trim() || !editingSong.artist.trim()) return;
-        try {
-            await dispatch(updateSong(editingSong));
-            setEditingSong(null); // Clear editing state after update
-        } catch (error) {
-            console.error('Failed to update song:', error);
-        }
-    };
+  useEffect(() => {
+    dispatch(fetchSongsRequest());
+  }, [dispatch]);
 
-    const handleDeleteSong = (id) => {
-        dispatch(deleteSong(id));
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewSong((prev) => ({ ...prev, [name]: value }));
+  };
 
-    const handleAddSong = async () => {
-        if (!newSongTitle.trim() || !newSongArtist.trim()) return;  
-        const newSong = { 
-            title: newSongTitle, 
-            artist: newSongArtist  
-        };
-        try {
-            await dispatch(addSong(newSong));
-            setNewSongTitle(''); // Clear title input after adding
-            setNewSongArtist(''); // Clear artist input after adding
-            setEditingSong(null); // Ensure no song is in editing mode
-        } catch (error) {
-            console.error('Failed to add song:', error);
-        }
-    };
+  const handleAddSong = () => {
+    if (newSong.title && newSong.artist) {
+      dispatch(addSong(newSong));
+      setNewSong({ title: '', artist: '' });
+    }
+  };
 
-    return (
-        <div>
-            <h2>Song List</h2>
+  const handleEditSong = (song) => {
+    setEditMode(song.id);
+    setUpdatedSong({ id: song.id, title: song.title, artist: song.artist });
+  };
 
-            {loading && <p>Loading...</p>}
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedSong((prev) => ({ ...prev, [name]: value }));
+  };
 
-            <input 
-                type="text" 
-                value={newSongTitle} 
-                onChange={(e) => setNewSongTitle(e.target.value)} 
-                placeholder="New song title" 
-            />
-            <input 
-                type="text" 
-                value={newSongArtist} 
-                onChange={(e) => setNewSongArtist(e.target.value)} 
-                placeholder="New song artist" 
-            />
-            <button onClick={handleAddSong}>Add Song</button>
+  const handleUpdateSong = () => {
+    if (updatedSong.title && updatedSong.artist) {
+      dispatch(updateSong(updatedSong));
+      setEditMode(null); 
+      setUpdatedSong({ id: '', title: '', artist: '' }); 
+    }
+  };
 
-            <ul>
-                {songs.map(song => (
-                    <li key={song.id}>
-                        {editingSong?.id === song.id ? (
-                            <>
-                                <input
-                                    type="text"
-                                    value={editingSong.title} 
-                                    onChange={(e) =>
-                                        setEditingSong({
-                                            ...editingSong,
-                                            title: e.target.value,
-                                        })
-                                    }
-                                />
-                                <input
-                                    type="text"
-                                    value={editingSong.artist} 
-                                    onChange={(e) =>
-                                        setEditingSong({
-                                            ...editingSong,
-                                            artist: e.target.value,
-                                        })
-                                    }
-                                />
-                                <button onClick={handleUpdateSong}>Update</button>
-                                <button onClick={() => setEditingSong(null)}>Cancel</button>
-                            </>
-                        ) : (
-                            <>
-                                {song.title} by {song.artist}
-                                <button onClick={() => setEditingSong(song)}>Edit</button>
-                                <button onClick={() => handleDeleteSong(song.id)}>Delete</button>
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  const handleDeleteSong = (id) => {
+    dispatch(deleteSong(id));
+  };
+
+  if (loading) return <p>Loading songs...</p>;
+  if (error) return <p>Error fetching songs: {error}</p>;
+
+  return (
+    <div>
+      <h2>Song List</h2>
+      <ul>
+        {songs.map((song) => (
+          <li key={song.id}>
+            {editMode === song.id ? (
+              <>
+                <input
+                  type="text"
+                  name="title"
+                  value={updatedSong.title}
+                  onChange={handleUpdateChange}
+                />
+                <input
+                  type="text"
+                  name="artist"
+                  value={updatedSong.artist}
+                  onChange={handleUpdateChange}
+                />
+                <button onClick={handleUpdateSong}>Save</button>
+              </>
+            ) : (
+              <>
+                {song.title} by {song.artist}
+                <button onClick={() => handleEditSong(song)}>Edit</button>
+                <button onClick={() => handleDeleteSong(song.id)}>Delete</button>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <h3>Add New Song</h3>
+      <input
+        type="text"
+        name="title"
+        placeholder="Title"
+        value={newSong.title}
+        onChange={handleInputChange}
+      />
+      <input
+        type="text"
+        name="artist"
+        placeholder="Artist"
+        value={newSong.artist}
+        onChange={handleInputChange}
+      />
+      <button onClick={handleAddSong}>Add Song</button>
+    </div>
+  );
 };
 
 export default SongList;

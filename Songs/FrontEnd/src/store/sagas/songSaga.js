@@ -23,7 +23,7 @@ function* addSongSaga(action) {
 function* editSong(action) {
     try {
         const song = yield call(updateSongApi, action.payload);
-        yield put(updateSong(song));
+        // yield put(updateSong(song));
     } catch (error) {
         console.error(error);
     }
@@ -32,7 +32,6 @@ function* editSong(action) {
 function* removeSong(action) {
     try {
         yield call(deleteSongApi, action.payload);
-        yield put(deleteSong(action.payload));
     } catch (error) {
         console.error(error);
     }
