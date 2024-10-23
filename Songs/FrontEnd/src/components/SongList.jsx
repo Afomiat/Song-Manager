@@ -1,4 +1,6 @@
-// src/components/SongList.js
+import './SongsList.css'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash, faMusic } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -45,8 +47,8 @@ const SongList = () => {
   const handleUpdateSong = () => {
     if (updatedSong.title && updatedSong.artist) {
       dispatch(updateSong(updatedSong));
-      setEditMode(null); 
-      setUpdatedSong({ id: '', title: '', artist: '' }); 
+      setEditMode(null);
+      setUpdatedSong({ id: '', title: '', artist: '' });
     }
   };
 
@@ -59,53 +61,86 @@ const SongList = () => {
 
   return (
     <div>
-      <h2>Song List</h2>
-      <ul>
-        {songs.map((song) => (
-          <li key={song.id}>
-            {editMode === song.id ? (
-              <>
-                <input
-                  type="text"
-                  name="title"
-                  value={updatedSong.title}
-                  onChange={handleUpdateChange}
-                />
-                <input
-                  type="text"
-                  name="artist"
-                  value={updatedSong.artist}
-                  onChange={handleUpdateChange}
-                />
-                <button onClick={handleUpdateSong}>Save</button>
-              </>
-            ) : (
-              <>
-                {song.title} by {song.artist}
-                <button onClick={() => handleEditSong(song)}>Edit</button>
-                <button onClick={() => handleDeleteSong(song.id)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="add-new">
+        <h3>
+          <FontAwesomeIcon icon={faMusic} /> <span className="name-add">Add New Song</span>
+        </h3>
+        <div className="input-container">
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={newSong.title}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="artist"
+            placeholder="Artist"
+            value={newSong.artist}
+            onChange={handleInputChange}
+          />
+          <button onClick={handleAddSong}>
+            <FontAwesomeIcon icon={faPlus} /> Add Song
+          </button>
+        </div>
+      </div>
 
-      <h3>Add New Song</h3>
-      <input
-        type="text"
-        name="title"
-        placeholder="Title"
-        value={newSong.title}
-        onChange={handleInputChange}
-      />
-      <input
-        type="text"
-        name="artist"
-        placeholder="Artist"
-        value={newSong.artist}
-        onChange={handleInputChange}
-      />
-      <button onClick={handleAddSong}>Add Song</button>
+      <h2 className="song-head">List of your songs ..</h2>
+
+      <ul>
+        {songs
+          .slice() // Create a shallow copy to avoid mutating the original array
+          .reverse() // Reverse the order of the array to show the most recent song first
+          .map((song) => (
+            <li key={song.id}>
+              <div className="song-container">
+                <div className="icon-title">
+                  <FontAwesomeIcon icon={faMusic} className="song-icon" />
+                  {editMode === song.id ? (
+                    <div className="edit-container">
+                      <input
+                        type="text"
+                        name="title"
+                        value={updatedSong.title}
+                        onChange={handleUpdateChange}
+                        placeholder="Title"
+                        className="edit-input"
+                      />
+                      <input
+                        type="text"
+                        name="artist"
+                        value={updatedSong.artist}
+                        onChange={handleUpdateChange}
+                        placeholder="Artist"
+                        className="edit-input"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="song-title">{song.title}</div>
+                      <div className="song-artist">by {song.artist}</div>
+                    </div>
+                  )}
+                </div>
+                <div className="button-container">
+                  {editMode === song.id ? (
+                    <button onClick={handleUpdateSong}>Save</button>
+                  ) : (
+                    <>
+                      <button className="edit" onClick={() => handleEditSong(song)}>
+                        <FontAwesomeIcon icon={faEdit} /> <span>Edit</span>
+                      </button>
+                      <button className="delete" onClick={() => handleDeleteSong(song.id)}>
+                        <FontAwesomeIcon icon={faTrash} /> <span>Delete</span>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+      </ul>
     </div>
   );
 };

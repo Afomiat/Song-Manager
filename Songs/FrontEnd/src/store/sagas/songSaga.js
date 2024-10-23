@@ -5,7 +5,7 @@ import { fetchSongsSuccess, fetchSongsFailure, updateSong, deleteSong,addSong } 
 function* fetchSongs() {
     try {
         const songs = yield call(fetchSongsApi);
-        const formattedSongs = songs.slice(0, 5);
+        const formattedSongs = songs;
         yield put(fetchSongsSuccess(formattedSongs));
     } catch (error) {
         yield put(fetchSongsFailure(error.message));

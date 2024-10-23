@@ -1,0 +1,20 @@
+.name{
+    text-align: center;
+    
+    text-transform: uppercase; 
+    margin-top: 50px;
+    /* margin-bottom: 200px; */
+}
+.name-song{
+    color: rgb(233, 226, 124);
+    font-size: 40px;
+    font-family:monospace;
+    text-transform: capitalize;
+}
+.name-managment{
+   color: rgb(153, 231, 250);
+   font-size: 40px;
+   font-family:monospace;
+   text-transform: capitalize;
+
+}
