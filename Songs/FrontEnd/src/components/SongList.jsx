@@ -56,8 +56,8 @@ const SongList = () => {
     dispatch(deleteSong(id));
   };
 
-  if (loading) return <p>Loading songs...</p>;
-  if (error) return <p>Error fetching songs: {error}</p>;
+  if (loading) return <p style={{ color: '#4a90e2', fontFamily:"monospace" }}>Loading songs...</p>;
+  if (error) return <p style={{ color: '#e94e77', fontFamily:"monospace", textTransform:'capitalize' }}>Error fetching songs: {error}</p>;
 
   return (
     <div>
@@ -90,8 +90,8 @@ const SongList = () => {
 
       <ul>
         {songs
-          .slice() // Create a shallow copy to avoid mutating the original array
-          .reverse() // Reverse the order of the array to show the most recent song first
+          .slice() 
+          .reverse() 
           .map((song) => (
             <li key={song.id}>
               <div className="song-container">
@@ -125,7 +125,7 @@ const SongList = () => {
                 </div>
                 <div className="button-container">
                   {editMode === song.id ? (
-                    <button onClick={handleUpdateSong}>Save</button>
+                    <button className='save-button'onClick={handleUpdateSong}>Save</button>
                   ) : (
                     <>
                       <button className="edit" onClick={() => handleEditSong(song)}>

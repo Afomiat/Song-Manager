@@ -30,7 +30,6 @@ export const songSlice = createSlice({
             }
         },
         deleteSong: (state, action) => {
-            console.log(action.payload, 'action.payload');
             state.songs = state.songs.filter(song => song.id !== action.payload);
         },
     },

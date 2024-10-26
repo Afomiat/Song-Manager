@@ -6,7 +6,7 @@ import SongList from './components/SongList';
 const App = () => {
     return (
         <div className='name'>
-            <span className='name-song'>Song</span><span className='name-managment'> Managment</span>
+            <span className='name-song'>Song</span><span className='name-managment'> Management</span>
             <SongList />
         </div>
     );

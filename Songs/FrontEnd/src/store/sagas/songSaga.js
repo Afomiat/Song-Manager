@@ -23,7 +23,6 @@ function* addSongSaga(action) {
 function* editSong(action) {
     try {
         const song = yield call(updateSongApi, action.payload);
-        // yield put(updateSong(song));
     } catch (error) {
         console.error(error);
     }

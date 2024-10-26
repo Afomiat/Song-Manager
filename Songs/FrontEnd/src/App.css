@@ -3,7 +3,16 @@
     
     text-transform: uppercase; 
     margin-top: 50px;
-    /* margin-bottom: 200px; */
+    margin-bottom: 200px;
+    height: calc(100vh - 50px);
+    overflow-y: auto;           
+    scrollbar-width: none;      
+    margin-bottom: 50px; 
+    overflow-x: hidden;
+}
+
+.name::-webkit-scrollbar {
+    display: none;
 }
 .name-song{
     color: rgb(233, 226, 124);
