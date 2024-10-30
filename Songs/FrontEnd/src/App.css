@@ -15,13 +15,13 @@
     display: none;
 }
 .name-song{
-    color: rgb(233, 226, 124);
+    color: rgb(210, 235, 154);
     font-size: 40px;
     font-family:monospace;
     text-transform: capitalize;
 }
 .name-managment{
-   color: rgb(153, 231, 250);
+   color: rgb(52, 185, 114);
    font-size: 40px;
    font-family:monospace;
    text-transform: capitalize;
